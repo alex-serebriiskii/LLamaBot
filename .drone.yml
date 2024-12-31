@@ -1,0 +1,33 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build
+    image: bash
+    commands:
+      - pwd
+      - ls -a
+
+  - name: build_docker_image
+    image: plugins/docker
+    settings:
+      repo: 
+      registry: 
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      dockerfile: dockerfile
+
+trigger:
+  branch:
+    - main
+    - master
+
+workspace:
+  base: /drone/src
+  path: schizollamabot
